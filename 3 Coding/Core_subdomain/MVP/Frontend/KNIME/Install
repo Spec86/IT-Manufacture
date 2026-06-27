@@ -8,4 +8,6 @@ pyarrow
 ----------
 
 KNIME
-KNIME Python Integration extension
+Extentions:
+    1. KNIME Python Integration extension
+    2. KNIME External Tool Support (for Powershell)
