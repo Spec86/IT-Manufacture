@@ -1,3 +1,10 @@
 IO
   Other
     Variable Creator
+
+
+
+
+script_path = C:\MyProject
+parameter1 = John
+parameter2 = Morning
