@@ -1,0 +1,22 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string parameter1 = null;
+        string parameter2 = null;
+
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (args[i] == "--parameter1" && i + 1 < args.Length)
+                parameter1 = args[i + 1];
+
+            if (args[i] == "--parameter2" && i + 1 < args.Length)
+                parameter2 = args[i + 1];
+        }
+
+        Console.WriteLine($"Hello {parameter1}");
+        Console.WriteLine($"Good {parameter2}");
+    }
+}
