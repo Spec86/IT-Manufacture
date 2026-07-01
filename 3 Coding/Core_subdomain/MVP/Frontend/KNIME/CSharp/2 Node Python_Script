@@ -1,0 +1,28 @@
+import subprocess
+import knime.scripting.io as knio
+import pandas as pd
+import os
+
+script_path = knio.flow_variables["script_path"]
+parameter1 = knio.flow_variables["parameter1"]
+parameter2 = knio.flow_variables["parameter2"]
+
+cmd = [
+    "dotnet",
+    "run",
+    "--project", script_path,
+    "--",
+    "--parameter1", parameter1,
+    "--parameter2", parameter2
+]
+
+result = subprocess.run(cmd, capture_output=True, text=True)
+
+df = pd.DataFrame([{
+    "script": script_path,
+    "stdout": result.stdout,
+    "stderr": result.stderr,
+    "returncode": result.returncode
+}])
+
+knio.output_tables[0] = knio.Table.from_pandas(df)
