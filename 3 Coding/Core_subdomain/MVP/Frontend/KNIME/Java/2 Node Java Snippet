@@ -22,46 +22,72 @@ public class JSnippet extends AbstractJSnippet {
 // expression start
     public void snippet() throws TypeException, ColumnException, Abort {
 // Enter your code here:
-    try {
+            try {
 
-        String classPath = (String) flowVariables.get("class_path");
-        String mainClass = (String) flowVariables.get("main_class");
-        String p1 = (String) flowVariables.get("param1");
-        String p2 = (String) flowVariables.get("param2");
+            // ─────────────────────────────
+            // 1. Read KNIME variables
+            // ─────────────────────────────
+            String classPath = (String) flowVariables.get("class_path");
+            String mainClass = (String) flowVariables.get("main_class");
+            String p1 = (String) flowVariables.get("param1");
+            String p2 = (String) flowVariables.get("param2");
 
-        List<String> cmd = new ArrayList<>();
+            // ─────────────────────────────
+            // 2. Build Java command
+            // ─────────────────────────────
+            List<String> cmd = new ArrayList<>();
 
-        cmd.add("java");
-        cmd.add("-cp");
-        cmd.add(classPath);
-        cmd.add(mainClass);
-        cmd.add(p1);
-        cmd.add(p2);
+            cmd.add("java");
+            cmd.add("-cp");
+            cmd.add(classPath);
+            cmd.add(mainClass);
 
-        ProcessBuilder pb = new ProcessBuilder(cmd);
-        pb.redirectErrorStream(true);
+            // IMPORTANT: match argparse style
+            cmd.add("--parameter1");
+            cmd.add(p1);
 
-        Process process = pb.start();
+            cmd.add("--parameter2");
+            cmd.add(p2);
 
-        BufferedReader br =
-            new BufferedReader(
-                new InputStreamReader(process.getInputStream()));
+            // ─────────────────────────────
+            // 3. Execute process
+            // ─────────────────────────────
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.redirectErrorStream(true);
 
-        String line;
+            Process process = pb.start();
 
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
+            BufferedReader br =
+                    new BufferedReader(
+                            new InputStreamReader(process.getInputStream())
+                    );
+
+            StringBuilder output = new StringBuilder();
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+
+            int exitCode = process.waitFor();
+
+            // ─────────────────────────────
+            // 4. Print logs to KNIME console
+            // ─────────────────────────────
+            System.out.println("=== JAVA OUTPUT ===");
+            System.out.println(output.toString());
+            System.out.println("EXIT CODE: " + exitCode);
+
+            // ─────────────────────────────
+            // 5. Fail node if Java failed
+            // ─────────────────────────────
+            if (exitCode != 0) {
+                throw new RuntimeException("Java process failed with code " + exitCode);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Execution error: " + e.getMessage(), e);
         }
-
-        int exitCode = process.waitFor();
-
-        if (exitCode != 0) {
-            throw new RuntimeException("Java process failed");
-        }
-
-    } catch (Exception e) {
-        throw new RuntimeException(e);
-    	   }
 		
 
 
