@@ -1,0 +1,70 @@
+// system imports
+import org.knime.base.node.jsnippet.expression.AbstractJSnippet;
+import org.knime.base.node.jsnippet.expression.Abort;
+import org.knime.base.node.jsnippet.expression.Cell;
+import org.knime.base.node.jsnippet.expression.ColumnException;
+import org.knime.base.node.jsnippet.expression.TypeException;
+import static org.knime.base.node.jsnippet.expression.Type.*;
+import java.util.Date;
+import java.util.Calendar;
+import org.w3c.dom.Document;
+
+
+// Your custom imports:
+import java.io.*;
+import java.util.*;
+// system variables
+public class JSnippet extends AbstractJSnippet {
+
+
+// Your custom variables:
+
+// expression start
+    public void snippet() throws TypeException, ColumnException, Abort {
+// Enter your code here:
+    try {
+
+        String classPath = (String) flowVariables.get("class_path");
+        String mainClass = (String) flowVariables.get("main_class");
+        String p1 = (String) flowVariables.get("param1");
+        String p2 = (String) flowVariables.get("param2");
+
+        List<String> cmd = new ArrayList<>();
+
+        cmd.add("java");
+        cmd.add("-cp");
+        cmd.add(classPath);
+        cmd.add(mainClass);
+        cmd.add(p1);
+        cmd.add(p2);
+
+        ProcessBuilder pb = new ProcessBuilder(cmd);
+        pb.redirectErrorStream(true);
+
+        Process process = pb.start();
+
+        BufferedReader br =
+            new BufferedReader(
+                new InputStreamReader(process.getInputStream()));
+
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            System.out.println(line);
+        }
+
+        int exitCode = process.waitFor();
+
+        if (exitCode != 0) {
+            throw new RuntimeException("Java process failed");
+        }
+
+    } catch (Exception e) {
+        throw new RuntimeException(e);
+    	   }
+		
+
+
+// expression end
+    }
+}
