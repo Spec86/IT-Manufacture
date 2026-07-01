@@ -29,8 +29,8 @@ public class JSnippet extends AbstractJSnippet {
             // ─────────────────────────────
             String classPath = (String) flowVariables.get("class_path");
             String mainClass = (String) flowVariables.get("main_class");
-            String p1 = (String) flowVariables.get("param1");
-            String p2 = (String) flowVariables.get("param2");
+            String p1 = (String) flowVariables.get("parameter1");
+            String p2 = (String) flowVariables.get("parameter2");
 
             // ─────────────────────────────
             // 2. Build Java command
