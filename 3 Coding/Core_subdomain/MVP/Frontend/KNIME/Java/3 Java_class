@@ -1,0 +1,23 @@
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
+
+@CommandLine.Command
+public class Main implements Runnable {
+
+    @Option(names = "--parameter1", description = "First parameter")
+    String parameter1;
+
+    @Option(names = "--parameter2", description = "Second parameter")
+    String parameter2;
+
+    public static void main(String[] args) {
+        new CommandLine(new Main()).execute(args);
+    }
+
+    @Override
+    public void run() {
+
+        System.out.println("Hello " + parameter1);
+        System.out.println("Good " + parameter2);
+    }
+}
