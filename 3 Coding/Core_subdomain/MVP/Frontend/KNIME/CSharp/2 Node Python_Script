@@ -1,12 +1,18 @@
+import os
 import subprocess
 import knime.scripting.io as knio
 import pandas as pd
-import os
 
+# ─────────────────────────────
+# 1. Read KNIME variables
+# ─────────────────────────────
 script_path = knio.flow_variables["script_path"]
 parameter1 = knio.flow_variables["parameter1"]
 parameter2 = knio.flow_variables["parameter2"]
 
+# ─────────────────────────────
+# 2. Build command
+# ─────────────────────────────
 cmd = [
     "dotnet",
     "run",
@@ -17,13 +23,36 @@ cmd = [
     "--parameter2", parameter2
 ]
 
+# ─────────────────────────────
+# 3. Execute
+# ─────────────────────────────
 result = subprocess.run(cmd, capture_output=True, text=True)
 
+# ─────────────────────────────
+# 4. Build log table
+# ─────────────────────────────
 df = pd.DataFrame([{
     "script": script_path,
+    "parameter1": parameter1,
+    "parameter2": parameter2,
     "stdout": result.stdout,
     "stderr": result.stderr,
-    "returncode": result.returncode
+    "returncode": result.returncode,
+    "success": result.returncode == 0
 }])
 
+# ─────────────────────────────
+# 5. Save to CSV (console log)
+# ─────────────────────────────
+output_path = knio.flow_variables.get(
+    "output_csv",
+    r"C:\logs\knime_run_log.csv"
+)
+
+os.makedirs(os.path.dirname(output_path), exist_ok=True)
+df.to_csv(output_path, index=False, encoding="utf-8")
+
+# ─────────────────────────────
+# 6. Output to KNIME
+# ─────────────────────────────
 knio.output_tables[0] = knio.Table.from_pandas(df)
