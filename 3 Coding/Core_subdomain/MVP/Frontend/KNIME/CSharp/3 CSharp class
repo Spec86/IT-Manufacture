@@ -1,22 +1,23 @@
-using System;
-
-class Program
+namespace knimeclient
 {
-    static void Main(string[] args)
+    internal class Program
     {
-        string parameter1 = null;
-        string parameter2 = null;
-
-        for (int i = 0; i < args.Length; i++)
+        static void Main(string[] args)
         {
-            if (args[i] == "--parameter1" && i + 1 < args.Length)
-                parameter1 = args[i + 1];
+            string parameter1 = string.Empty;
+            string parameter2 = string.Empty;
 
-            if (args[i] == "--parameter2" && i + 1 < args.Length)
-                parameter2 = args[i + 1];
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] == "--parameter1" && i + 1 < args.Length)
+                    parameter1 = args[i + 1];
+
+                if (args[i] == "--parameter2" && i + 1 < args.Length)
+                    parameter2 = args[i + 1];
+            }
+
+            Console.WriteLine($"Hello {parameter1}");
+            Console.WriteLine($"Good {parameter2}");
         }
-
-        Console.WriteLine($"Hello {parameter1}");
-        Console.WriteLine($"Good {parameter2}");
     }
 }
