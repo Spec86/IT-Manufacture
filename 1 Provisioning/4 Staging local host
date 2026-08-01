@@ -35,7 +35,7 @@ apt-get update -y
 
 apt-get install webmin -y
 
-systemctl enable webmin && sudo systemctl start webmin
+systemctl enable webmin && systemctl start webmin
 
 systemctl status webmin
 
