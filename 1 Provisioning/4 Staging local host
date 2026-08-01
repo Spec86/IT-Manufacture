@@ -30,3 +30,13 @@ apt-get install curl -y
 
 curl -o setup-repos.sh https://raw.githubusercontent.com/webmin/webmin/master/setup-repos.sh
 sh setup-repos.sh
+
+apt-get update -y
+
+apt-get install webmin -y
+
+systemctl enable webmin && sudo systemctl start webmin
+
+systemctl status webmin
+
+systemctl restart webmin
